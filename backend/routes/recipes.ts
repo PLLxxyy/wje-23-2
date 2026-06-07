@@ -55,6 +55,29 @@ router.get('/my', authMiddleware, (req: any, res) => {
   })))
 })
 
+router.get('/following', authMiddleware, (req: any, res) => {
+  const recipes = db.prepare(`
+    SELECT r.*, u.name as author_name
+    FROM recipes r
+    JOIN users u ON r.user_id = u.id
+    JOIN follows f ON r.user_id = f.following_id
+    WHERE f.follower_id = ?
+    ORDER BY r.created_at DESC
+  `).all(req.userId)
+  res.json(recipes.map((r: any) => ({
+    id: r.id,
+    userId: r.user_id,
+    title: r.title,
+    cuisine: r.cuisine,
+    difficulty: r.difficulty,
+    cookTime: r.cook_time,
+    photo: r.photo,
+    description: r.description,
+    authorName: r.author_name,
+    createdAt: r.created_at
+  })))
+})
+
 router.get('/:id', (req: any, res) => {
   const recipe: any = db.prepare(`
     SELECT r.*, u.name as author_name
