@@ -15,6 +15,7 @@ export default function Home() {
   const [difficultyFilter, setDifficultyFilter] = useState('全部')
   const [maxTime, setMaxTime] = useState('')
   const [showFilters, setShowFilters] = useState(false)
+  const [followingLoaded, setFollowingLoaded] = useState(false)
   const navigate = useNavigate()
 
   const isLoggedIn = !!localStorage.getItem('token')
@@ -33,10 +34,11 @@ export default function Home() {
     return result
   }, [recipes, cuisineFilter, difficultyFilter, maxTime])
 
-  const handleTabChange = (tab: TabType) => {
+  const handleTabChange = async (tab: TabType) => {
     setActiveTab(tab)
-    if (tab === 'following' && isLoggedIn) {
-      fetchFollowingRecipes()
+    if (tab === 'following' && isLoggedIn && !followingLoaded) {
+      await fetchFollowingRecipes()
+      setFollowingLoaded(true)
     }
   }
 

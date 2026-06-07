@@ -45,8 +45,7 @@ export function useRecipes() {
 
   useEffect(() => {
     fetchRecipes()
-    fetchFollowingRecipes()
-  }, [fetchRecipes, fetchFollowingRecipes])
+  }, [fetchRecipes])
 
   return { recipes, loading, followingRecipes, followingLoading, fetchRecipes, fetchFollowingRecipes, createRecipe }
 }
